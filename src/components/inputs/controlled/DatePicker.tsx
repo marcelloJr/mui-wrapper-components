@@ -2,40 +2,34 @@ import React from 'react';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
-import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import { Controller } from 'react-hook-form';
 import IDatePicker from '@interfaces/IDatePicker';
-import { responsivityHelper, inputErrorHelper } from '@utils/helpers';
+import { inputErrorHelper, regexHelper } from '@utils/helpers';
+import Container from '@components/layouts/InputContainer';
+import { format } from 'date-fns';
 
 const DatePicker: React.FC<IDatePicker> = (props) => {
-  const { label, placeholder, helpText, spans, style, name, required, disabled, onDateChange } = props;
+  const { label, placeholder, helpText, spans, style, name, required, disabled, onChange } = props;
 
   return (
-    <Grid
-      style={style}  
-      xs={responsivityHelper('xs', spans)}  
-      sm={responsivityHelper('sm', spans)} 
-      md={responsivityHelper('md', spans)} 
-      lg={responsivityHelper('lg', spans)} 
-      xl={responsivityHelper('xl', spans)}
-      item
-    >
+    <Container style={style} spans={spans}>
       <Controller
         name={name}
-        rules={{ required }}
+        rules={{ required, pattern: regexHelper().date }}
         render={({ 
           field: { onChange: fieldOnChange, ref, value: fieldValue = null}, 
           fieldState: { error }
-        }) => {          
+        }) => {
+          let errorHelpText = error?.type === 'pattern' ? inputErrorHelper('pattern.date') : inputErrorHelper(error?.type);     
           return (
             <FormControl error={!!error} fullWidth>
               <DesktopDatePicker
                 label={label}
                 value={fieldValue}
-                onChange={(value) => {
-                  if (onDateChange) onDateChange(value);
-                  fieldOnChange(value)
+                onChange={(date) => {                
+                  if (onChange) onChange(date);
+                  fieldOnChange(date)
                 }}
                 renderInput={(params: any) =>
                   <TextField 
@@ -44,13 +38,21 @@ const DatePicker: React.FC<IDatePicker> = (props) => {
                     value={fieldValue} 
                     error={!!error} 
                     required={required}
+                    onBlur={() => {       
+                      try {
+                        format(fieldValue, 'dd/MM/yyy');
+                      } catch (e) {
+                        if (fieldValue) fieldOnChange('99/99/9999');
+                        else fieldOnChange(null);
+                      }
+                    }}
                     fullWidth 
                   />
                 }
                 disabled={disabled}
                 inputRef={ref}
               />
-              <FormHelperText error>{error ? inputErrorHelper(error.type, {}) : ''}</FormHelperText>
+              <FormHelperText error>{errorHelpText}</FormHelperText>
             </FormControl>
           )
         }}
@@ -58,7 +60,7 @@ const DatePicker: React.FC<IDatePicker> = (props) => {
       <FormHelperText>
         {helpText}
       </FormHelperText>
-    </Grid>
+    </Container>
   );
 }
 

@@ -63,7 +63,7 @@ const Form: React.FC<IForm> = (props) => {
 
   return (
     <FormProvider {...allMethods}>
-      <FormContent container={Array.isArray(children)} rowSpacing={3} columnSpacing={2}>
+      <FormContent container={Array.isArray(children)}>
         {!loading && children}
       </FormContent>
       <ActionButtons spacing={2} direction='row'>

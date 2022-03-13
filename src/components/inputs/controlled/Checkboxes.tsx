@@ -2,34 +2,30 @@ import React from 'react';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormHelperText from '@mui/material/FormHelperText';
-import Grid from '@mui/material/Grid';
 import { Controller } from 'react-hook-form';
 import ICheckboxes from '@interfaces/ICheckboxes';
-import { responsivityHelper } from '@utils/helpers';
+import { inputErrorHelper } from '@utils/helpers';
+import FormControl from '@mui/material/FormControl';
+import Container from '@components/layouts/InputContainer';
 
 const Checkboxes: React.FC<ICheckboxes> = (props) => {
-  const { options, disabled, spans, style, name, helpText, required, onChange } = props;
+  const { options, disabled, spans, style, name, helpText, required, label, onChange } = props;
 
   return (
-    <Grid  
-      style={style}  
-      xs={responsivityHelper('xs', spans)}  
-      sm={responsivityHelper('sm', spans)} 
-      md={responsivityHelper('md', spans)} 
-      lg={responsivityHelper('lg', spans)} 
-      xl={responsivityHelper('xl', spans)}
-      item
-    >
+    <Container style={style} spans={spans}>
       <Controller
         name={name}
         rules={{ required }}
         render={({ 
-          field: { onChange: fieldOnChange, value: fieldValue }
+          field: { onChange: fieldOnChange, value: fieldValue },
+          fieldState: { error }
         }) => {
           return (
-            <>
-              {options.map(option =>
+            <FormControl error={!!error} required={required}>
+              <FormHelperText>{label} {required && '*'}</FormHelperText>
+              {options.map((option, index) =>
                 <FormControlLabel
+                  key={`form-label-checkbox-${index}`}
                   label={option.label}
                   control={
                     <Checkbox
@@ -53,17 +49,17 @@ const Checkboxes: React.FC<ICheckboxes> = (props) => {
                     />
                   }
                   disabled={disabled}
-                  style={{ width: '100%' }}
                 />
               )}
-            </>
+              <FormHelperText error>{inputErrorHelper(error?.type)}</FormHelperText>
+            </FormControl>
           )
         }}
       />
       <FormHelperText>
         {helpText}
       </FormHelperText>
-    </Grid>
+    </Container>
   )
 }
 

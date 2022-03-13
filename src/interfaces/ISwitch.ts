@@ -1,3 +1,5 @@
 import IInput from './IInput';
 
-export default interface ISwitch extends IInput { }
+export default interface ISwitch extends IInput {
+  placeholder?: string;
+}

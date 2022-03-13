@@ -1,6 +1,6 @@
-import { ReactInputMask } from 'react-input-mask';
 import IInput from './IInput';
+import IInputRestProps from './IInputRestProps';
 
-export default interface IInputMask extends IInput { 
-  mask: ReactInputMask | ((value: string) => ReactInputMask);
+export default interface IInputMask extends IInput, IInputRestProps { 
+  mask: string | (string | RegExp)[];
 }

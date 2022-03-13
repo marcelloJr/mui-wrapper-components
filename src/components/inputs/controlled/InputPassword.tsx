@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import FormHelperText from '@mui/material/FormHelperText';
-import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import { Controller } from 'react-hook-form';
 import IInputPassword from '@interfaces/IInputPassword';
-import { responsivityHelper, inputErrorHelper } from '@utils/helpers';
+import { inputErrorHelper } from '@utils/helpers';
+import Container from '@components/layouts/InputContainer';
 
 const InputPassword: React.FC<IInputPassword> = (props) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -24,15 +24,7 @@ const InputPassword: React.FC<IInputPassword> = (props) => {
   };
 
   return (
-    <Grid
-      style={style}  
-      xs={responsivityHelper('xs', spans)}  
-      sm={responsivityHelper('sm', spans)} 
-      md={responsivityHelper('md', spans)} 
-      lg={responsivityHelper('lg', spans)} 
-      xl={responsivityHelper('xl', spans)}
-      item
-    >
+    <Container style={style} spans={spans}>
       <Controller
         name={name}
         rules={{
@@ -47,7 +39,7 @@ const InputPassword: React.FC<IInputPassword> = (props) => {
           return (
             <TextField
               label={label}
-              helperText={error ? inputErrorHelper(error.type, { minLength, maxLength }) : null}
+              helperText={inputErrorHelper(error?.type, { minLength, maxLength })}
               error={!!error}
               onChange={(event) => {
                 if (onChange) onChange(event.target.value);
@@ -81,7 +73,7 @@ const InputPassword: React.FC<IInputPassword> = (props) => {
       <FormHelperText>
         {helpText}
       </FormHelperText>
-    </Grid>
+    </Container>
   )
 }
 

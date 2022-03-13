@@ -8,4 +8,5 @@ export default interface IAutocomplete extends IInput {
   emptyOptionsText?: string;
   clearText?: string;
   multiple?: boolean;
+  placeholder?: string;
 }

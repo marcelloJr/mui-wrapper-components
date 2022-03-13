@@ -17,4 +17,6 @@ export const ActionButtons = styled(Stack)`
 
 export const FormContent = styled(Grid)`
   margin-top: 0px !important;
+  margin-left: 0px !important;
+  width: 100% !important;
 `;

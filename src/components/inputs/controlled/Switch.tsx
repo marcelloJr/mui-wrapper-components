@@ -1,26 +1,17 @@
 import React from 'react';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormHelperText from '@mui/material/FormHelperText';
-import Grid from '@mui/material/Grid';
 import InputLabel from '@mui/material/InputLabel';
 import MuiSwitch from '@mui/material/Switch';
 import { Controller } from 'react-hook-form';
 import ISwitch from '@interfaces/ISwitch';
-import { responsivityHelper } from '@utils/helpers';
+import Container from '@components/layouts/InputContainer';
 
 const Switch: React.FC<ISwitch> = (props) => {
-  const { label, name, placeholder, spans, style, helpText, required, onChange } = props;
+  const { label, name, placeholder = '', spans, style, helpText, required, onChange } = props;
 
   return (
-    <Grid
-      style={style}  
-      xs={responsivityHelper('xs', spans)}  
-      sm={responsivityHelper('sm', spans)} 
-      md={responsivityHelper('md', spans)} 
-      lg={responsivityHelper('lg', spans)} 
-      xl={responsivityHelper('xl', spans)}
-      item
-    >
+    <Container style={style} spans={spans}>
       <Controller
         name={name}
         rules={{ required }}
@@ -37,7 +28,7 @@ const Switch: React.FC<ISwitch> = (props) => {
                 }}
                 value={fieldValue}
                 control={<MuiSwitch defaultChecked={fieldValue} />}
-                label={placeholder ? placeholder : ''}
+                label={placeholder}
               />
             </>
           )
@@ -46,7 +37,7 @@ const Switch: React.FC<ISwitch> = (props) => {
       <FormHelperText>
         {helpText}
       </FormHelperText>
-    </Grid>
+    </Container>
   );
 }
 

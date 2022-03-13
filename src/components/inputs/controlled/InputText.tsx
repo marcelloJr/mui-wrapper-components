@@ -1,25 +1,17 @@
 import React from 'react';
 import FormHelperText from '@mui/material/FormHelperText';
-import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import { Controller } from 'react-hook-form';
 import IInputText from '@interfaces/IInputText';
-import { responsivityHelper, inputErrorHelper } from '@utils/helpers';
+import { inputErrorHelper } from '@utils/helpers';
+import Container from '@components/layouts/InputContainer';
 
 const InputText: React.FC<IInputText> = (props) => {
   const { required, placeholder, name, label, disabled, spans, style,
     maxLength, minLength, multiline, helpText, onChange } = props;
 
   return (
-    <Grid
-      style={style}  
-      xs={responsivityHelper('xs', spans)}  
-      sm={responsivityHelper('sm', spans)} 
-      md={responsivityHelper('md', spans)} 
-      lg={responsivityHelper('lg', spans)} 
-      xl={responsivityHelper('xl', spans)}
-      item
-    >
+    <Container style={style} spans={spans}>
       <Controller
         name={name}
         rules={{
@@ -34,7 +26,7 @@ const InputText: React.FC<IInputText> = (props) => {
           return (
             <TextField
               label={label}
-              helperText={error ? inputErrorHelper(error.type, { minLength, maxLength }) : null}
+              helperText={inputErrorHelper(error?.type, { minLength, maxLength })}
               error={!!error}
               onChange={(event) => {
                 if (onChange) onChange(event.target.value);
@@ -55,7 +47,7 @@ const InputText: React.FC<IInputText> = (props) => {
       <FormHelperText>
         {helpText}
       </FormHelperText>
-    </Grid>
+    </Container>
   );
 }
 

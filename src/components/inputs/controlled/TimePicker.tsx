@@ -1,64 +1,54 @@
 import React from 'react';
 import FormHelperText from '@mui/material/FormHelperText';
-import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import TimePickerMui from '@mui/lab/TimePicker';
 import { Controller } from 'react-hook-form';
 import ITimePicker from '@interfaces/ITimePicker';
-import { responsivityHelper, inputErrorHelper } from '@utils/helpers';
+import { inputErrorHelper, regexHelper } from '@utils/helpers';
+import { format } from 'date-fns';
+import Container from '@components/layouts/InputContainer';
 
 const TimePicker: React.FC<ITimePicker> = (props) => {
-  const { label, spans, style, name, required, disabled, helpText, onChange } = props;
+  const { label, spans, style, name, required, disabled, helpText, placeholder, onChange } = props;
 
   return (
-    <Grid
-      style={style}  
-      xs={responsivityHelper('xs', spans)}  
-      sm={responsivityHelper('sm', spans)} 
-      md={responsivityHelper('md', spans)} 
-      lg={responsivityHelper('lg', spans)} 
-      xl={responsivityHelper('xl', spans)}
-      item
-    >
+    <Container style={style} spans={spans}>
       <Controller
         name={name}
-        rules={{ required }}
+        rules={{ required, pattern: regexHelper().time }}
         render={({ 
           field: { onChange: fieldOnChange, value: fieldValue = null, ref }, 
-          fieldState: { error },
+          fieldState: { error }
         }) => {
-          // console.log('TimePicker', fieldValue);
-          let invalidTime = false;
-          // const errorType = invalidTime ? 'time' : error?.type;
-
+          let errorHelpText = error?.type === 'pattern' ? inputErrorHelper('pattern.time') : inputErrorHelper(error?.type);
+          
           return (
             <>
               <TimePickerMui
                 label={label}
-                onChange={(date, value = '') => {
-                  // fieldOnChange(date);
-                  if (value.length > 3) {
-                    invalidTime = false;
-                  } else {
-                    invalidTime = true;
-                  }
-                  console.log(invalidTime, value.length);
+                onChange={(date) => {
+                  if (onChange) onChange(date);
+                  fieldOnChange(date);
                 }}
                 value={fieldValue}
+                inputRef={ref}
+                disabled={disabled}
                 renderInput={(params) => (
                   <TextField 
                     {...params}
                     error={!!error}
                     value={fieldValue}
-                    helperText={error ? inputErrorHelper(error.type, {}) : null}
+                    helperText={errorHelpText}
                     required={required}
-                    inputRef={ref}
-                    onBlur={() => {             
-                      if (invalidTime) {
-                        fieldOnChange(null);
-                        console.log('aqui dentroo porras', fieldValue);
+                    onBlur={() => {       
+                      try {
+                        format(fieldValue, 'HH:mm');
+                      } catch (e) {
+                        if (fieldValue) fieldOnChange('99:99');
+                        else fieldOnChange(null);
                       }
                     }}
+                    placeholder={placeholder}
                     fullWidth
                   />
                 )}
@@ -70,7 +60,7 @@ const TimePicker: React.FC<ITimePicker> = (props) => {
       <FormHelperText>
         {helpText}
       </FormHelperText>
-    </Grid>
+    </Container>
   )
 }
 

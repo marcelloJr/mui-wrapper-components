@@ -1,19 +1,12 @@
+import IInput from "./IInput";
+
 export interface ISelectOption {
   label: string | number;
   value: string | number;
 } 
 
-export default interface ISelect { 
-  label: string;
-  name: string;
-  required?: true | false;
+export default interface ISelect extends IInput { 
   options: Array<ISelectOption>;
-  defaultValue?: any;
   onSelect?: (e: any) => void | undefined;
-  spans?: number[];
-  style?: any;
-  value?: any;
-  control?: any;
-  disabled?: true | false;
-  helpText?: string;
+  placeholder?: string;
 }

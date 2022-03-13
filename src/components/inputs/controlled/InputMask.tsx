@@ -1,32 +1,24 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import FormHelperText from '@mui/material/FormHelperText';
-import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import ReactInputMask from 'react-input-mask';
 import { Controller } from 'react-hook-form';
 import IInputMask from '@interfaces/IInputMask';
-import { responsivityHelper, inputErrorHelper } from '@utils/helpers';
+import { inputErrorHelper } from '@utils/helpers';
+import Container from '@components/layouts/InputContainer';
 
 const InputMask: React.FC<IInputMask> = (props) => {
-  const { label, name, mask, style, required, disabled, spans, minLength, maxLength, helpText, onChange } = props;
+  const { label, name, mask, style, required, disabled, placeholder, spans, 
+    minLength, maxLength, helpText, onChange } = props;
 
-  const Mask = (props: any) => {
-    const { inputRef, ...others } = props;
+  const Mask = forwardRef((props: any, inputRef) => {
     return (
-      <ReactInputMask {...others} mask={mask} />
+      <ReactInputMask {...props} mask={mask} inputRef={inputRef} />
     )
-  };
+  });
 
   return (
-    <Grid
-      style={style}  
-      xs={responsivityHelper('xs', spans)}  
-      sm={responsivityHelper('sm', spans)} 
-      md={responsivityHelper('md', spans)} 
-      lg={responsivityHelper('lg', spans)} 
-      xl={responsivityHelper('xl', spans)}
-      item
-    >
+    <Container style={style} spans={spans}>
       <Controller
         name={name}
         rules={{
@@ -41,7 +33,7 @@ const InputMask: React.FC<IInputMask> = (props) => {
           return (
             <TextField
               required={required}
-              helperText={error ? inputErrorHelper(error.type, { minLength, maxLength }) : null}
+              helperText={inputErrorHelper(error?.type, { minLength, maxLength })}
               error={!!error}
               label={label}
               onChange={(event) => {
@@ -53,6 +45,7 @@ const InputMask: React.FC<IInputMask> = (props) => {
               InputLabelProps={{ shrink: !!fieldValue }}
               InputProps={{ inputComponent: Mask }}
               inputRef={ref}
+              placeholder={placeholder} 
               fullWidth
             />
           )
@@ -61,7 +54,7 @@ const InputMask: React.FC<IInputMask> = (props) => {
       <FormHelperText>
         {helpText}
       </FormHelperText>
-    </Grid>
+    </Container>
   );
 }
 

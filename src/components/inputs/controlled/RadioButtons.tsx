@@ -1,6 +1,5 @@
 import React from 'react';
 import FormHelperText from '@mui/material/FormHelperText';
-import Grid from '@mui/material/Grid';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
@@ -8,26 +7,17 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import { Controller } from 'react-hook-form';
 import IRadioButtons from '@interfaces/IRadioButtons';
-import { responsivityHelper } from '@utils/helpers';
+import Container from '@components/layouts/InputContainer';
 
 const RadioButtons: React.FC<IRadioButtons> = (props) => {
-  const { label, name, row, options, spans, style, defaultValue,
+  const { label, name, row, options, spans, style,
     labelStyle, disabled, required, helpText, onChange } = props;
 
   return (
-    <Grid
-      style={style}  
-      xs={responsivityHelper('xs', spans)}  
-      sm={responsivityHelper('sm', spans)} 
-      md={responsivityHelper('md', spans)} 
-      lg={responsivityHelper('lg', spans)} 
-      xl={responsivityHelper('xl', spans)}
-      item
-    >
+    <Container style={style} spans={spans}>
       <Controller
         name={name}
         rules={{ required }}
-        defaultValue={defaultValue}
         render={({ 
           field: { onChange: fieldOnChange, value: fieldValue, ref }
         }) => {
@@ -38,7 +28,6 @@ const RadioButtons: React.FC<IRadioButtons> = (props) => {
                 name={name}
                 row={row}
                 value={fieldValue}
-                defaultValue={defaultValue}
                 onChange={(_, value) => {
                   if (onChange) onChange(value);
                   fieldOnChange(value);
@@ -54,7 +43,7 @@ const RadioButtons: React.FC<IRadioButtons> = (props) => {
       <FormHelperText>
         {helpText}
       </FormHelperText>
-    </Grid>
+    </Container>
   );
 }
 

@@ -2,26 +2,17 @@ import React from 'react';
 import CheckboxMUI from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormHelperText from '@mui/material/FormHelperText';
-import Grid from '@mui/material/Grid';
 import { Controller } from 'react-hook-form';
 import ICheckbox from '@interfaces/ICheckbox';
-import { responsivityHelper } from '@utils/helpers';
+import Container from '@components/layouts/InputContainer';
 
 const Checkbox: React.FC<ICheckbox> = (props) => {
-  const { disabled, spans, style, name, label, helpText, required, onChange } = props;
+  const { disabled, spans, style, name, label, helpText, onChange } = props;
   return (
-    <Grid  style={style}  
-      xs={responsivityHelper('xs', spans)}  
-      sm={responsivityHelper('sm', spans)} 
-      md={responsivityHelper('md', spans)} 
-      lg={responsivityHelper('lg', spans)} 
-      xl={responsivityHelper('xl', spans)}
-      item
-    >
+    <Container style={style} spans={spans}>
       <Controller
         name={name}
-        rules={{ required }}
-        render={({ field: { onChange: fieldOnChange, value: fieldValue} }) => {
+        render={({ field: { onChange: fieldOnChange, value: fieldValue } }) => {
           return (
             <FormControlLabel
               label={label}
@@ -41,7 +32,7 @@ const Checkbox: React.FC<ICheckbox> = (props) => {
       <FormHelperText>
         {helpText}
       </FormHelperText>
-    </Grid>
+    </Container>
   )
 }
 

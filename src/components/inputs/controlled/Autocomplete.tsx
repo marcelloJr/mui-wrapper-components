@@ -1,12 +1,12 @@
 import React from 'react';
 import AutocompleteMui from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Grid';
 import Checkbox from '@mui/material/Checkbox';
 import FormHelperText from '@mui/material/FormHelperText';
 import { Controller } from 'react-hook-form';
 import IAutocomplete from '@interfaces/IAutocomplete';
-import { responsivityHelper, inputErrorHelper } from '@utils/helpers';
+import { inputErrorHelper } from '@utils/helpers';
+import Container from '@components/layouts/InputContainer';
 
 const Autocomplete: React.FC<IAutocomplete> = (props) => {
   const { name, label, options, required, disabled, helpText, spans, style,
@@ -14,15 +14,7 @@ const Autocomplete: React.FC<IAutocomplete> = (props) => {
     optionLabel = 'label', optionValue = 'value', onChange, onSelect } = props;
 
   return (
-    <Grid 
-      style={style}  
-      xs={responsivityHelper('xs', spans)}  
-      sm={responsivityHelper('sm', spans)} 
-      md={responsivityHelper('md', spans)} 
-      lg={responsivityHelper('lg', spans)} 
-      xl={responsivityHelper('xl', spans)}
-      item
-    >
+    <Container style={style} spans={spans}>
       <Controller
         name={name}
         rules={{ required }}
@@ -58,7 +50,7 @@ const Autocomplete: React.FC<IAutocomplete> = (props) => {
                 <TextField
                   {...params}
                   required={required}
-                  helperText={error ? inputErrorHelper(error.type, {}) : null}
+                  helperText={inputErrorHelper(error?.type)}
                   error={!!error}
                   label={label}
                   placeholder={placeholder}
@@ -73,7 +65,7 @@ const Autocomplete: React.FC<IAutocomplete> = (props) => {
       <FormHelperText>
         {helpText}
       </FormHelperText>
-    </Grid>
+    </Container>
 
   )
 }
