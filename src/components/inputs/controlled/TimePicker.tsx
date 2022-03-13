@@ -1,37 +1,68 @@
 import React from 'react';
-import { FormHelperText, FormLabel, Grid, TextField } from '@mui/material';
+import FormHelperText from '@mui/material/FormHelperText';
+import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
+import TimePickerMui from '@mui/lab/TimePicker';
 import { Controller } from 'react-hook-form';
 import ITimePicker from '@interfaces/ITimePicker';
-import { validationsHelpers } from '@utils/ValidationsHelpers';
+import { responsivityHelper, inputErrorHelper } from '@utils/helpers';
 
 const TimePicker: React.FC<ITimePicker> = (props) => {
-  const { label, span, style, name, required, disabled, helpText, onChange } = props;
+  const { label, spans, style, name, required, disabled, helpText, onChange } = props;
 
   return (
-    <Grid style={style} item xs={span ?? 12}>
+    <Grid
+      style={style}  
+      xs={responsivityHelper('xs', spans)}  
+      sm={responsivityHelper('sm', spans)} 
+      md={responsivityHelper('md', spans)} 
+      lg={responsivityHelper('lg', spans)} 
+      xl={responsivityHelper('xl', spans)}
+      item
+    >
       <Controller
         name={name}
         rules={{ required }}
         render={({ 
-          field: { onChange: fieldOnChange, value: fieldValue, ref }, 
-          fieldState: { error }
+          field: { onChange: fieldOnChange, value: fieldValue = null, ref }, 
+          fieldState: { error },
         }) => {
+          // console.log('TimePicker', fieldValue);
+          let invalidTime = false;
+          // const errorType = invalidTime ? 'time' : error?.type;
+
           return (
             <>
-              <FormLabel>{label}</FormLabel>
-              <TextField
-                value={fieldValue}
-                type='time'
-                onChange={(value) => {
-                  if (onChange) onChange(value);
-                  fieldOnChange(value)
+              <TimePickerMui
+                label={label}
+                onChange={(date, value = '') => {
+                  // fieldOnChange(date);
+                  if (value.length > 3) {
+                    invalidTime = false;
+                  } else {
+                    invalidTime = true;
+                  }
+                  console.log(invalidTime, value.length);
                 }}
-                required={required}
-                disabled={disabled}
-                inputRef={ref}
-                fullWidth
+                value={fieldValue}
+                renderInput={(params) => (
+                  <TextField 
+                    {...params}
+                    error={!!error}
+                    value={fieldValue}
+                    helperText={error ? inputErrorHelper(error.type, {}) : null}
+                    required={required}
+                    inputRef={ref}
+                    onBlur={() => {             
+                      if (invalidTime) {
+                        fieldOnChange(null);
+                        console.log('aqui dentroo porras', fieldValue);
+                      }
+                    }}
+                    fullWidth
+                  />
+                )}
               />
-              <FormHelperText error>{error ? validationsHelpers(error.type, {}) : ''}</FormHelperText>
             </>
           )
         }}

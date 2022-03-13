@@ -1,14 +1,29 @@
 import React from 'react';
-import { FormControl, FormControlLabel, FormHelperText, FormLabel, Grid, Radio, RadioGroup } from '@mui/material';
+import FormHelperText from '@mui/material/FormHelperText';
+import Grid from '@mui/material/Grid';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormLabel from '@mui/material/FormLabel';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
 import { Controller } from 'react-hook-form';
 import IRadioButtons from '@interfaces/IRadioButtons';
+import { responsivityHelper } from '@utils/helpers';
 
 const RadioButtons: React.FC<IRadioButtons> = (props) => {
-  const { label, name, row, options, span, style, defaultValue,
+  const { label, name, row, options, spans, style, defaultValue,
     labelStyle, disabled, required, helpText, onChange } = props;
 
   return (
-    <Grid style={style} item xs={span ?? 12}>
+    <Grid
+      style={style}  
+      xs={responsivityHelper('xs', spans)}  
+      sm={responsivityHelper('sm', spans)} 
+      md={responsivityHelper('md', spans)} 
+      lg={responsivityHelper('lg', spans)} 
+      xl={responsivityHelper('xl', spans)}
+      item
+    >
       <Controller
         name={name}
         rules={{ required }}

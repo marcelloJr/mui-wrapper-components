@@ -1,16 +1,26 @@
 import React from 'react';
-import { Checkbox as CheckboxMUI, FormControlLabel, FormHelperText, Grid } from '@mui/material';
+import CheckboxMUI from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormHelperText from '@mui/material/FormHelperText';
+import Grid from '@mui/material/Grid';
 import { Controller } from 'react-hook-form';
 import ICheckbox from '@interfaces/ICheckbox';
+import { responsivityHelper } from '@utils/helpers';
 
 const Checkbox: React.FC<ICheckbox> = (props) => {
-  const { disabled, span, style, name, label, defaultValue, helpText, required, onChange } = props;
+  const { disabled, spans, style, name, label, helpText, required, onChange } = props;
   return (
-    <Grid style={style} item xs={span ?? 12}>
+    <Grid  style={style}  
+      xs={responsivityHelper('xs', spans)}  
+      sm={responsivityHelper('sm', spans)} 
+      md={responsivityHelper('md', spans)} 
+      lg={responsivityHelper('lg', spans)} 
+      xl={responsivityHelper('xl', spans)}
+      item
+    >
       <Controller
         name={name}
         rules={{ required }}
-        defaultValue={defaultValue}
         render={({ field: { onChange: fieldOnChange, value: fieldValue} }) => {
           return (
             <FormControlLabel

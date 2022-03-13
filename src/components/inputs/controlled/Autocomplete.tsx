@@ -1,36 +1,44 @@
 import React from 'react';
-import { Autocomplete as MuiAutocomplete, TextField, Grid, Checkbox, FormHelperText } from '@mui/material';
-import { CheckBoxOutlineBlank, CheckBox } from '@mui/icons-material';
+import AutocompleteMui from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
+import Grid from '@mui/material/Grid';
+import Checkbox from '@mui/material/Checkbox';
+import FormHelperText from '@mui/material/FormHelperText';
 import { Controller } from 'react-hook-form';
 import IAutocomplete from '@interfaces/IAutocomplete';
-import { validationsHelpers } from '@utils/ValidationsHelpers';
+import { responsivityHelper, inputErrorHelper } from '@utils/helpers';
 
 const Autocomplete: React.FC<IAutocomplete> = (props) => {
-  const { name, label, options, required, disabled, helpText, defaultValue, span, style,
-    placeholder, emptyOptionsText = 'No options', clearText = 'Clear', multiple, onChange, onSelect } = props;
-
-  const icon = <CheckBoxOutlineBlank fontSize='small' />;
-  const checkedIcon = <CheckBox fontSize='small' />;
+  const { name, label, options, required, disabled, helpText, spans, style,
+    placeholder, emptyOptionsText = 'No options', clearText = 'Clear', multiple, 
+    optionLabel = 'label', optionValue = 'value', onChange, onSelect } = props;
 
   return (
-    <Grid style={style} item xs={span ?? 12}>
+    <Grid 
+      style={style}  
+      xs={responsivityHelper('xs', spans)}  
+      sm={responsivityHelper('sm', spans)} 
+      md={responsivityHelper('md', spans)} 
+      lg={responsivityHelper('lg', spans)} 
+      xl={responsivityHelper('xl', spans)}
+      item
+    >
       <Controller
         name={name}
         rules={{ required }}
-        defaultValue={defaultValue}
         render={({ 
           field: { onChange: fieldOnChange, value: fieldValue, ref }, 
           fieldState: { error } 
         }) => {
-          const emptyValue = multiple ? [] : '';
-
+          const emptyValue = multiple ? [] : null;
+          
           return (
-            <MuiAutocomplete
+            <AutocompleteMui
               onInputChange={(_, value) => onChange ? onChange(value) : null}
               noOptionsText={emptyOptionsText}
               onChange={(_, value) => {
                 if (onSelect) onSelect(value);
-                fieldOnChange(value);
+                fieldOnChange(value);                
               }}
               value={fieldValue || emptyValue}
               clearText={clearText}
@@ -39,28 +47,20 @@ const Autocomplete: React.FC<IAutocomplete> = (props) => {
               renderOption={(props, option, { selected }) => {
                 return (
                   <li {...props}>
-                    <Checkbox
-                      icon={icon}
-                      checkedIcon={checkedIcon}
-                      style={{ marginRight: 8 }}
-                      checked={selected}
-                    />
-                    {option.label}
+                    <Checkbox style={{ marginRight: 8 }} checked={selected} />
+                    {option[optionLabel]}
                   </li>
                 )
               }}
-              isOptionEqualToValue={(option, value) => (option.value === value.value)}
-              getOptionLabel={(option) => option.label ?? option}
+              isOptionEqualToValue={(option, value) => option[optionValue] === value[optionValue]}
+              getOptionLabel={(option) => option[optionLabel] || option}
               renderInput={(params) =>
                 <TextField
                   {...params}
                   required={required}
-                  helperText={error ? validationsHelpers(error.type, {}) : null}
+                  helperText={error ? inputErrorHelper(error.type, {}) : null}
                   error={!!error}
                   label={label}
-                  name={name}
-                  onChange={fieldOnChange}
-                  disabled={disabled}
                   placeholder={placeholder}
                   inputRef={ref}
                 />

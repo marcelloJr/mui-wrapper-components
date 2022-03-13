@@ -15,11 +15,13 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "paths": {
-      "@interfaces/*": ["./src/interfaces/*"],
-      "@styled/*": ["./src/styles/*"],
-      "@utils/*": ["./src/utils/*"]
+      "@interfaces/*": ["./interfaces/*"],
+      "@styles/*": ["./styles/*"],
+      "@utils/*": ["./utils/*"],
+      "@components/*": ["./components/*"],
+      "@samples/*": ["./samples/*"]
     }
   },
   "include": ["src"],

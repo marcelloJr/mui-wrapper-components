@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
-import { Button } from '@mui/material';
-import { Save, Add } from '@mui/icons-material';
+import Button from '@mui/material/Button';
+import Save from '@mui/icons-material/Save';
+import Add from '@mui/icons-material/Add';
 import { useNavigate, useParams } from 'react-router-dom';
 import IForm from '@interfaces/IForm';
-import { ActionButtons, FormContent } from '@styled/Layout.styled';
+import { ActionButtons, FormContent } from '@styles/Layout.styled';
 
 const Form: React.FC<IForm> = (props) => {
   const [loading, setLoading] = useState(true);
@@ -12,8 +13,8 @@ const Form: React.FC<IForm> = (props) => {
   const params: any = useParams();
   const navigate = useNavigate();
 
-  const { service, children, goBackAfterSave = true, hasReset = true, afterSave, afterUpdate } = props;
-  const { save, update, getById, isSaving, defaultValues } = service;
+  const { service, children, goBackAfterSave = true, hasReset = true, afterSave, afterUpdate, submitForm } = props;
+  const { save, update, getById, isSaving, defaultValues } = service ?? {};
 
   const allMethods = useForm({
     defaultValues: defaultValues
@@ -23,17 +24,21 @@ const Form: React.FC<IForm> = (props) => {
 
   const onSubmitForm = async (payload: any) => {
     try {
-      if (!Object.keys(params).length && save) {
-        await save(payload);
-
-        if (goBackAfterSave) navigate(-1);
-        else 
-          if (afterSave) afterSave();
-
-      } else {
-        if (update) {
-          await update(payload.id, payload);
-          if (afterUpdate) afterUpdate();
+      if (submitForm) {
+        submitForm(payload);
+      } else if (service) {
+        if (!Object.keys(params).length && save) {
+          await save(payload);
+  
+          if (goBackAfterSave) navigate(-1);
+          else {
+            if (afterSave) afterSave();
+          }
+        } else {
+          if (update) {
+            await update(payload.id, payload);
+            if (afterUpdate) afterUpdate();
+          }
         }
       }
     } catch (e) {
@@ -58,13 +63,13 @@ const Form: React.FC<IForm> = (props) => {
 
   return (
     <FormProvider {...allMethods}>
-      <ActionButtons spacing={2} direction='row'>
-        {hasReset && <Button variant='outlined' startIcon={<Add />} onClick={() => reset()} disabled={isSaving}>Novo</Button>}
-        <Button variant='contained' startIcon={<Save />} onClick={handleSubmit(onSubmitForm)} disabled={isSaving}>Salvar</Button>
-      </ActionButtons>
       <FormContent container={Array.isArray(children)} rowSpacing={3} columnSpacing={2}>
         {!loading && children}
       </FormContent>
+      <ActionButtons spacing={2} direction='row'>
+        {hasReset && <Button variant='outlined' startIcon={<Add />} onClick={() => reset()} disabled={isSaving}>Limpar</Button>}
+        <Button variant='contained' startIcon={<Save />} onClick={handleSubmit(onSubmitForm)} disabled={isSaving}>Salvar</Button>
+      </ActionButtons>
     </FormProvider>
   )
 }

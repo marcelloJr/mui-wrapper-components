@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import FormHelperText from '@mui/material/FormHelperText';
+import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
 import { Controller } from 'react-hook-form';
-import { FormHelperText, Grid, IconButton, InputAdornment, TextField } from '@mui/material';
 import IInputPassword from '@interfaces/IInputPassword';
-import { validationsHelpers } from '@utils/ValidationsHelpers';
+import { responsivityHelper, inputErrorHelper } from '@utils/helpers';
 
 const InputPassword: React.FC<IInputPassword> = (props) => {
   const [showPassword, setShowPassword] = useState(false);
-  const { required, placeholder, name, label, disabled, span, 
+  const { required, placeholder, name, label, disabled, spans, 
     helpText, style, minLength, maxLength, onChange } = props;
 
   const handleClickShowPassword = () => {
@@ -19,7 +24,15 @@ const InputPassword: React.FC<IInputPassword> = (props) => {
   };
 
   return (
-    <Grid style={style} item xs={span ?? 12}>
+    <Grid
+      style={style}  
+      xs={responsivityHelper('xs', spans)}  
+      sm={responsivityHelper('sm', spans)} 
+      md={responsivityHelper('md', spans)} 
+      lg={responsivityHelper('lg', spans)} 
+      xl={responsivityHelper('xl', spans)}
+      item
+    >
       <Controller
         name={name}
         rules={{
@@ -34,7 +47,7 @@ const InputPassword: React.FC<IInputPassword> = (props) => {
           return (
             <TextField
               label={label}
-              helperText={error ? validationsHelpers(error.type, { minLength, maxLength }) : null}
+              helperText={error ? inputErrorHelper(error.type, { minLength, maxLength }) : null}
               error={!!error}
               onChange={(event) => {
                 if (onChange) onChange(event.target.value);
@@ -43,12 +56,9 @@ const InputPassword: React.FC<IInputPassword> = (props) => {
               value={fieldValue || ''}
               placeholder={placeholder}
               disabled={disabled}
-              fullWidth
               required={required}
               type={showPassword ? 'text' : 'password'}
-              inputProps={{
-                maxLength: maxLength
-              }}
+              inputProps={{ maxLength: maxLength }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position='end'>
@@ -63,6 +73,7 @@ const InputPassword: React.FC<IInputPassword> = (props) => {
                 )
               }}
               inputRef={ref}
+              fullWidth
             />
           )
         }}

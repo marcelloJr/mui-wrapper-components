@@ -1,20 +1,31 @@
 import React from 'react';
-import { FormControl, InputLabel, Select as MuiSelect, MenuItem, Grid, FormHelperText } from '@mui/material';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MuiSelect from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import Grid from '@mui/material/Grid';
+import FormHelperText from '@mui/material/FormHelperText';
 import { Controller } from 'react-hook-form';
 import ISelect, { ISelectOption } from '@interfaces/ISelect';
-import { validationsHelpers } from '@utils/ValidationsHelpers';
+import { responsivityHelper, inputErrorHelper } from '@utils/helpers';
 
 const Select: React.FC<ISelect> = (props) => {
-  const { label, name, required, options, defaultValue,
-    onSelect, span, style, disabled, helpText } = props;
+  const { label, name, required, options, spans, style, disabled, helpText, onSelect } = props;
 
   const id = `${name}-label`;
   return (
-    <Grid style={style} item xs={span ?? 12}>
+    <Grid
+      style={style}  
+      xs={responsivityHelper('xs', spans)}  
+      sm={responsivityHelper('sm', spans)} 
+      md={responsivityHelper('md', spans)} 
+      lg={responsivityHelper('lg', spans)} 
+      xl={responsivityHelper('xl', spans)}
+      item
+    >
       <Controller
         name={name}
         rules={{ required }}
-        defaultValue={defaultValue}
         render={({ 
           field: { onChange: fieldOnChange, value: fieldValue, ref }, 
           fieldState: { error } 
@@ -26,7 +37,6 @@ const Select: React.FC<ISelect> = (props) => {
                 error={!!error}
                 labelId={id}
                 label={label}
-                name={name}
                 value={fieldValue || ''}
                 onChange={(event) => {
                   if (onSelect) onSelect(event);
@@ -40,7 +50,7 @@ const Select: React.FC<ISelect> = (props) => {
                   <MenuItem key={`${index}-${name}-option`} value={option.value}>{option.label}</MenuItem>
                 )}
               </MuiSelect>
-              <FormHelperText error>{error ? validationsHelpers(error.type, {}) : ''}</FormHelperText>
+              <FormHelperText error>{error ? inputErrorHelper(error.type, {}) : ''}</FormHelperText>
             </FormControl>
           )
         }}

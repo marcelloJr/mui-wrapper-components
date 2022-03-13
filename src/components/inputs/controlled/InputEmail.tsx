@@ -1,14 +1,24 @@
 import React from 'react';
-import { FormHelperText, Grid, TextField } from '@mui/material';
+import FormHelperText from '@mui/material/FormHelperText';
+import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
 import { Controller } from 'react-hook-form';
 import IInputEmail from '@interfaces/IInputEmail';
-import { validationsHelpers } from '@utils/ValidationsHelpers';
+import { responsivityHelper, inputErrorHelper } from '@utils/helpers';
 
 const InputText: React.FC<IInputEmail> = (props) => {
-  const { required, placeholder, name, label, disabled, span, style, helpText, onChange } = props;
+  const { required, placeholder, name, label, disabled, spans, style, helpText, onChange } = props;
 
   return (
-    <Grid style={style} item xs={span ?? 12}>
+    <Grid
+      style={style}  
+      xs={responsivityHelper('xs', spans)}  
+      sm={responsivityHelper('sm', spans)} 
+      md={responsivityHelper('md', spans)} 
+      lg={responsivityHelper('lg', spans)} 
+      xl={responsivityHelper('xl', spans)}
+      item
+    >
       <Controller
         name={name}
         rules={{
@@ -24,7 +34,7 @@ const InputText: React.FC<IInputEmail> = (props) => {
           return (
             <TextField
               label={label}
-              helperText={error ? validationsHelpers(type, {}) : null}
+              helperText={error ? inputErrorHelper(type, {}) : null}
               error={!!error}
               onChange={(event) => {
                 if (onChange) onChange(event.target.value);
@@ -33,10 +43,10 @@ const InputText: React.FC<IInputEmail> = (props) => {
               value={fieldValue || ''}
               placeholder={placeholder}
               disabled={disabled}
-              fullWidth
               required={required}
               type='email'
               inputRef={ref}
+              fullWidth
             />
           )
         }}

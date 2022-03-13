@@ -1,10 +1,10 @@
 import React from 'react';
-import Button from '@mui/material/Button';
+import FormExample from '@samples/form/FormExample';
 
 const App: React.FC = () => {
   return (
     <div>
-      <Button variant="contained">Hello World</Button>
+      <FormExample />
     </div>
   )
 }

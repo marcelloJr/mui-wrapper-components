@@ -1,12 +1,14 @@
 import React from 'react';
-import { FormHelperText, Grid, TextField } from '@mui/material';
+import FormHelperText from '@mui/material/FormHelperText';
+import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
 import ReactInputMask from 'react-input-mask';
 import { Controller } from 'react-hook-form';
-import { validationsHelpers } from '@utils/ValidationsHelpers';
 import IInputMask from '@interfaces/IInputMask';
+import { responsivityHelper, inputErrorHelper } from '@utils/helpers';
 
 const InputMask: React.FC<IInputMask> = (props) => {
-  const { label, name, mask, style, required, disabled, span, minLength, maxLength, helpText, onChange } = props;
+  const { label, name, mask, style, required, disabled, spans, minLength, maxLength, helpText, onChange } = props;
 
   const Mask = (props: any) => {
     const { inputRef, ...others } = props;
@@ -16,7 +18,15 @@ const InputMask: React.FC<IInputMask> = (props) => {
   };
 
   return (
-    <Grid style={style} item xs={span ?? 12}>
+    <Grid
+      style={style}  
+      xs={responsivityHelper('xs', spans)}  
+      sm={responsivityHelper('sm', spans)} 
+      md={responsivityHelper('md', spans)} 
+      lg={responsivityHelper('lg', spans)} 
+      xl={responsivityHelper('xl', spans)}
+      item
+    >
       <Controller
         name={name}
         rules={{
@@ -31,22 +41,17 @@ const InputMask: React.FC<IInputMask> = (props) => {
           return (
             <TextField
               required={required}
-              helperText={error ? validationsHelpers(error.type, { minLength, maxLength }) : null}
+              helperText={error ? inputErrorHelper(error.type, { minLength, maxLength }) : null}
               error={!!error}
               label={label}
-              name={name}
               onChange={(event) => {
                 if (onChange) onChange(event.target.value);
                 fieldOnChange(event);
               }}
               disabled={disabled}
               defaultValue={fieldValue}
-              InputLabelProps={{
-                shrink: !!fieldValue
-              }}
-              InputProps={{
-                inputComponent: Mask
-              }}
+              InputLabelProps={{ shrink: !!fieldValue }}
+              InputProps={{ inputComponent: Mask }}
               inputRef={ref}
               fullWidth
             />

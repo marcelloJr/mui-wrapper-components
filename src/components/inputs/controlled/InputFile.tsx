@@ -1,15 +1,26 @@
 import React from 'react';
-import { FormHelperText, FormLabel, Grid, TextField } from '@mui/material';
+import FormHelperText from '@mui/material/FormHelperText';
+import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
+import FormLabel from '@mui/material/FormLabel';
 import { Controller } from 'react-hook-form';
 import IInputFile from '@interfaces/IInputFile';
-import { validationsHelpers } from '@utils/ValidationsHelpers';
+import { responsivityHelper, inputErrorHelper } from '@utils/helpers';
 
 const InputFile: React.FC<IInputFile> = (props) => {
-  const { required, placeholder, name, label, disabled, helpText, span,
+  const { required, placeholder, name, label, disabled, helpText, spans,
     style, accept = 'application/pdf, image/png, image/jpeg', onChange } = props;
 
   return (
-    <Grid style={style} item xs={span ?? 12}>
+    <Grid
+      style={style}  
+      xs={responsivityHelper('xs', spans)}  
+      sm={responsivityHelper('sm', spans)} 
+      md={responsivityHelper('md', spans)} 
+      lg={responsivityHelper('lg', spans)} 
+      xl={responsivityHelper('xl', spans)}
+      item
+    >
       <Controller
         name={name}
         rules={{ required }}
@@ -21,7 +32,7 @@ const InputFile: React.FC<IInputFile> = (props) => {
             <>
               <FormLabel error={!!error}>{label}</FormLabel>
               <TextField
-                helperText={error ? validationsHelpers(error.type, {}) : null}
+                helperText={error ? inputErrorHelper(error.type, {}) : null}
                 error={!!error}
                 onChange={(e: any) => {
                   if (onChange) onChange(e.target.files[0]); 

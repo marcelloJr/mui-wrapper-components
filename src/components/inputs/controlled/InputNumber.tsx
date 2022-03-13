@@ -1,15 +1,26 @@
 import React from 'react';
-import { Grid, TextField, InputAdornment, FormHelperText } from '@mui/material';
+import FormHelperText from '@mui/material/FormHelperText';
+import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
 import { Controller } from 'react-hook-form';
 import IInputNumber from '@interfaces/IInputNumber';
-import { validationsHelpers } from '@utils/ValidationsHelpers';
+import { responsivityHelper, inputErrorHelper } from '@utils/helpers';
 
 const InputNumber: React.FC<IInputNumber> = (props) => {
-  const { required, placeholder, name, label, disabled, span,
-    style, minLength, maxLength, currencyChar, helpText, defaultValue, onChange } = props;
+  const { required, placeholder, name, label, disabled, spans,
+    style, minLength, maxLength, currencyChar, helpText, onChange } = props;
 
   return (
-    <Grid style={style} item xs={span ?? 12}>
+    <Grid
+      style={style}  
+      xs={responsivityHelper('xs', spans)}  
+      sm={responsivityHelper('sm', spans)} 
+      md={responsivityHelper('md', spans)} 
+      lg={responsivityHelper('lg', spans)} 
+      xl={responsivityHelper('xl', spans)}
+      item
+    >
       <Controller
         name={name}
         rules={{
@@ -17,7 +28,6 @@ const InputNumber: React.FC<IInputNumber> = (props) => {
           maxLength,
           minLength
         }}
-        defaultValue={defaultValue}
         render={({ 
           field: { onChange: fieldOnChange, value: fieldValue, ref }, 
           fieldState: { error }
@@ -25,7 +35,7 @@ const InputNumber: React.FC<IInputNumber> = (props) => {
           return (
             <TextField
               label={label}
-              helperText={error ? validationsHelpers(error.type, { minLength, maxLength }) : null}
+              helperText={error ? inputErrorHelper(error.type, { minLength, maxLength }) : null}
               error={!!error}
               onChange={(event) => {
                 if (onChange) onChange(event.target.value);
@@ -36,9 +46,7 @@ const InputNumber: React.FC<IInputNumber> = (props) => {
               placeholder={placeholder}
               disabled={disabled}
               required={required}
-              InputProps={{
-                startAdornment: currencyChar ? <InputAdornment position='start'>{currencyChar}</InputAdornment> : null,
-              }}
+              InputProps={{ startAdornment: currencyChar ? <InputAdornment position='start'>{currencyChar}</InputAdornment> : null }}
               inputRef={ref}
               fullWidth
             />

@@ -1,15 +1,25 @@
 import React from 'react';
-import { FormHelperText, Grid, TextField } from '@mui/material';
+import FormHelperText from '@mui/material/FormHelperText';
+import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
 import { Controller } from 'react-hook-form';
 import IInputText from '@interfaces/IInputText';
-import { validationsHelpers } from '@utils/ValidationsHelpers';
+import { responsivityHelper, inputErrorHelper } from '@utils/helpers';
 
 const InputText: React.FC<IInputText> = (props) => {
-  const { required, placeholder, name, label, disabled, span, style,
-    maxLength, minLength, multiline, defaultValue, helpText, onChange } = props;
+  const { required, placeholder, name, label, disabled, spans, style,
+    maxLength, minLength, multiline, helpText, onChange } = props;
 
   return (
-    <Grid style={style} item xs={span ?? 12}>
+    <Grid
+      style={style}  
+      xs={responsivityHelper('xs', spans)}  
+      sm={responsivityHelper('sm', spans)} 
+      md={responsivityHelper('md', spans)} 
+      lg={responsivityHelper('lg', spans)} 
+      xl={responsivityHelper('xl', spans)}
+      item
+    >
       <Controller
         name={name}
         rules={{
@@ -17,7 +27,6 @@ const InputText: React.FC<IInputText> = (props) => {
           maxLength,
           minLength
         }}
-        defaultValue={defaultValue}
         render={({ 
           field: { onChange: fieldOnChange, ref, value: fieldValue }, 
           fieldState: { error }
@@ -25,7 +34,7 @@ const InputText: React.FC<IInputText> = (props) => {
           return (
             <TextField
               label={label}
-              helperText={error ? validationsHelpers(error.type, { minLength, maxLength }) : null}
+              helperText={error ? inputErrorHelper(error.type, { minLength, maxLength }) : null}
               error={!!error}
               onChange={(event) => {
                 if (onChange) onChange(event.target.value);
@@ -34,11 +43,11 @@ const InputText: React.FC<IInputText> = (props) => {
               value={fieldValue || ''}
               placeholder={placeholder}
               disabled={disabled}
-              fullWidth
               required={required}
               multiline={multiline}
               rows={multiline ? 4 : 0}
               inputRef={ref}
+              fullWidth
             />
           )
         }}
